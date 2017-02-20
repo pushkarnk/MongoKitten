@@ -21,6 +21,8 @@ public final class MongoSocket: MongoTCP {
 
         self.sslEnabled = options["sslEnabled"] as? Bool ?? false
         socket = try Socket.create() // tcp socket
+        let readBufferSize = Int(ProcessInfo.processInfo.environment["READ_BUFFER_SIZE"] ?? "4096") ?? 4096 //4K is the default, anyway
+        socket.readBufferSize = readBufferSize
         if sslEnabled {
             let invalidCertificateAllowed = options["invalidCertificateAllowed"] as? Bool ?? false
             let sslConfig = SSLService.Configuration(withCACertificateFilePath: nil, usingCertificateFile: nil, withKeyFile: nil, usingSelfSignedCerts: invalidCertificateAllowed, cipherSuite: nil)
